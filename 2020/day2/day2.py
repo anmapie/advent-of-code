@@ -37,7 +37,7 @@ def main():
 def parse_input_line(line):
     tokens = line.split()
 
-    # first token: int-int (part 1: min chars-max chars) OR (part 2: char position - char position)
+    # first token: int-int (part 1: min chars-max chars) OR (part 2: char position-char position)
     char_min, char_max = tuple([int(i) for i in tokens[0].split("-")])
 
     # second token: target char (followed by ':', which we'll ignore)
@@ -53,11 +53,7 @@ def valid_char_count_password_count(password_tuples):
     valid_passwords = 0
     for password_tuple in password_tuples:
         char_min, char_max, target_char, password = password_tuple
-        target_char_count = 0
-        for char in password:
-            if char == target_char:
-                target_char_count += 1
-
+        target_char_count = password.count(target_char)
         if target_char_count >= char_min and target_char_count <= char_max:
             valid_passwords += 1
     return valid_passwords
@@ -77,7 +73,7 @@ def is_valid_position_password(password_tuple):
     # password is valid IFF:
     # the target char occurs in target position 1 or target position 2
     # and does NOT occur in both position 1 and position 2
-    # any other occurrences of the char ar irrelevant
+    # any other occurrences of the char are irrelevant
     # given target positions are not zero indexed, so we need to offset by 1
     if password[target_position_1 - 1] == target_char:
         return password[target_position_2 - 1] != target_char
