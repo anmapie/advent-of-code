@@ -33,31 +33,44 @@
 import sys
 
 TARGET_SUM = 2020
-DEFAULT_VALUES = 2
 
 
 def main():
     input_file = sys.argv[1]
     try:
         with open(input_file) as file_reader:
-            numbers = file_reader.readlines()
-            print(target_sum_product(numbers))
+            numbers = [int(line) for line in file_reader.readlines()]
+            print(target_sum_product_2(numbers))
+            print(target_sum_product_3(numbers))
     except Exception as error:
         print(error)
 
 
-def target_sum_product(numbers):
+def target_sum_product_2(numbers):
     numbers_length = len(numbers)
     for i in range(numbers_length):
-        number_i = int(numbers[i])
+        number_i = numbers[i]
         if number_i > TARGET_SUM:
             continue
         for j in range(i + 1, numbers_length):
-            number_j = int(numbers[j])
+            number_j = numbers[j]
+            if number_i + number_j == TARGET_SUM:
+                return number_i * number_j
+    raise Exception(f"No numbers in given list add up to {TARGET_SUM}")
+
+
+def target_sum_product_3(numbers):
+    numbers_length = len(numbers)
+    for i in range(numbers_length):
+        number_i = numbers[i]
+        if number_i > TARGET_SUM:
+            continue
+        for j in range(i + 1, numbers_length):
+            number_j = numbers[j]
             if number_i + number_j > TARGET_SUM:
                 continue
             for k in range(j + 1, numbers_length):
-                number_k = int(numbers[k])
+                number_k = numbers[k]
                 if number_i + number_j + number_k == TARGET_SUM:
                     return number_i * number_j * number_k
     raise Exception(f"No numbers in given list add up to {TARGET_SUM}")
