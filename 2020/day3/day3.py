@@ -72,8 +72,6 @@
 
 import sys
 
-RIGHT = 3
-DOWN = 1
 TREE = "#"
 SLOPES = [(3, 1), (1, 1), (5, 1), (7, 1), (1, 2)]
 
