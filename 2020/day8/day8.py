@@ -55,71 +55,76 @@ def main():
     except Exception as error:
         print(error)
 
+
 # returns a tuple:
 # wether or not the instructions result in an infinite loop (true/false), the value of the accumulator before execution halted
 def run_instructions(instructions):
-  accumulator = 0
-  executed_instructions = []
-  next_instruction_index = 0
-  
-  # execute instructions until we hit a loop (an instruction we've already executed)
-  # or until or next instruction is out of range (aka we run all the instructions)
-  while not next_instruction_index in executed_instructions and next_instruction_index < len(instructions) :
-    executed_instructions.append(next_instruction_index)
+    accumulator = 0
+    executed_instructions = []
+    next_instruction_index = 0
 
-    # action format: <3 letter action> <+/-><int>
-    # sample actions:
-    # nop +0, jmp -3, acc +1
-    action, raw_action_value = tuple(instructions[next_instruction_index].split())
+    # execute instructions until we hit a loop (an instruction we've already executed)
+    # or until or next instruction is out of range (aka we run all the instructions)
+    while (
+        not next_instruction_index in executed_instructions
+        and next_instruction_index < len(instructions)
+    ):
+        executed_instructions.append(next_instruction_index)
 
-    # convert value to an int
-    action_value = int(raw_action_value)
+        # action format: <3 letter action> <+/-><int>
+        # sample actions:
+        # nop +0, jmp -3, acc +1
+        action, raw_action_value = tuple(instructions[next_instruction_index].split())
 
-    # do action
-    if (action == 'nop'):
-      # no-op - go to next instruction
-      next_instruction_index += 1
-    elif (action == 'acc'):
-      # add to accumulator
-      accumulator += action_value
-      # go to next instruction
-      next_instruction_index += 1
-    elif (action == 'jmp'):
-      # jump to instruction indicated by value
-      next_instruction_index += action_value
-    else:
-      raise Exception(f"Invalid instruction value {action}")
-  
-  instruction_loop = next_instruction_index in executed_instructions
-  return (instruction_loop, accumulator)
+        # convert value to an int
+        action_value = int(raw_action_value)
+
+        # do action
+        if action == "nop":
+            # no-op - go to next instruction
+            next_instruction_index += 1
+        elif action == "acc":
+            # add to accumulator
+            accumulator += action_value
+            # go to next instruction
+            next_instruction_index += 1
+        elif action == "jmp":
+            # jump to instruction indicated by value
+            next_instruction_index += action_value
+        else:
+            raise Exception(f"Invalid instruction value {action}")
+
+    instruction_loop = next_instruction_index in executed_instructions
+    return (instruction_loop, accumulator)
+
 
 # with the given instructions, one no-op or jump instruction can be altered
 # to remove the infinite loop and run the instructions completely
 def find_accumulator_without_corrupt_instruction(instructions):
-  for index, instruction in enumerate(instructions):
-    action = instruction[0:3]
+    for index, instruction in enumerate(instructions):
+        action = instruction[0:3]
 
-    # if the instruction is an acc, we can skip it
-    if (action == 'acc'):
-      continue
+        # if the instruction is an acc, we can skip it
+        if action == "acc":
+            continue
 
-    # make a new copy of the instructions each iteration, to avoid modifying the og
-    instruction_copy= copy.deepcopy(instructions)
+        # make a new copy of the instructions each iteration, to avoid modifying the og
+        instruction_copy = copy.deepcopy(instructions)
 
-    # if the action is a no-op or jump, switch it to the other type 
-    # and run the instructions to see if the loop is fixed
-    if (action == 'nop'):
-      instruction_copy[index] = 'jmp' + instruction[3:]
-    elif (action == 'jmp'):
-      instruction_copy[index] = 'nop' + instruction[3:]
-    else:
-      raise Exception(f"Invalid instruction value {action}")
-    
-    has_loop, accumulator = run_instructions(instruction_copy)
+        # if the action is a no-op or jump, switch it to the other type
+        # and run the instructions to see if the loop is fixed
+        if action == "nop":
+            instruction_copy[index] = "jmp" + instruction[3:]
+        elif action == "jmp":
+            instruction_copy[index] = "nop" + instruction[3:]
+        else:
+            raise Exception(f"Invalid instruction value {action}")
 
-    if not has_loop:
-      return accumulator
+        has_loop, accumulator = run_instructions(instruction_copy)
 
-    
+        if not has_loop:
+            return accumulator
+
+
 if __name__ == "__main__":
     main()
