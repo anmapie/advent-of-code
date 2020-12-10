@@ -199,9 +199,8 @@ def count_all_valid_adapter_arrangements(adapter_joltages):
         while difference <= 3 and next_index < len(sorted_adapter_joltages):
             difference = sorted_adapter_joltages[next_index] - adapter_joltage
             if difference <= 3:
-                options.append(adapter_joltage)
+                options.append(difference)
                 next_index += 1
-        print(options)
         if len(options):
             all_option_paths.append(options)
 
