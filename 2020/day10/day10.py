@@ -180,6 +180,7 @@ def find_adapter_joltage_differences(adapter_joltages):
 
     return differences
 
+
 # calculate all possible valid adapter arrangements
 # the difference between adjacent adapters must be >= 1 and <= 3
 # adapters must be connected in ascending order
@@ -188,50 +189,50 @@ def count_all_valid_adapter_arrangements(adapter_joltages):
     valid_arrangements = 1
     all_option_paths = []
     for index, adapter_joltage in enumerate(sorted_adapter_joltages):
-      # find the difference between the adapter and all subsequent adapters
-      # stop when we hit an invalid one
-      # this will give us all the possible path options for each individual adapter
-      options = []
-      difference = 0
-      next_index = index + 1
-      
-      while difference <= 3 and next_index < len(sorted_adapter_joltages):
-        difference = sorted_adapter_joltages[next_index] - adapter_joltage
-        if difference <= 3:
-          options.append(adapter_joltage)
-          next_index += 1
-      print(options)
-      if len(options):
-        all_option_paths.append(options)
+        # find the difference between the adapter and all subsequent adapters
+        # stop when we hit an invalid one
+        # this will give us all the possible path options for each individual adapter
+        options = []
+        difference = 0
+        next_index = index + 1
+
+        while difference <= 3 and next_index < len(sorted_adapter_joltages):
+            difference = sorted_adapter_joltages[next_index] - adapter_joltage
+            if difference <= 3:
+                options.append(adapter_joltage)
+                next_index += 1
+        print(options)
+        if len(options):
+            all_option_paths.append(options)
 
     # we can use our list of path options to math out all the possible path combinations
     option_accumulator = 0
     prev_options_count = 0
     for options in all_option_paths:
-      options_count = len(options)
+        options_count = len(options)
 
-      # if we only have one option, our branching options have converged;
-      # reset all of the intermittent accumulator stuff and
-      # multiply the valid arrangements by our running permutation total
-      if options_count == 1:
-        if option_accumulator > 0:
-          valid_arrangements *= option_accumulator
-          option_accumulator = 0
-          prev_options_count = 0
-        continue
-      
-      # here's the magic math:
-      # if our previous option set was > 1, we need to add those total 
-      # options together to account for all of the possible paths they represent
-      # if the previous options set was larger than our current options set, we need
-      # to offset our path options by the difference between them, because that
-      # number of path options has already been captured by the PREVIOUS options
-      # (or you know, magic)
-      offset = 0
-      if prev_options_count > options_count:
-        offset = prev_options_count - options_count
-      option_accumulator += options_count - offset
-      prev_options_count = len(options)
+        # if we only have one option, our branching options have converged;
+        # reset all of the intermittent accumulator stuff and
+        # multiply the valid arrangements by our running permutation total
+        if options_count == 1:
+            if option_accumulator > 0:
+                valid_arrangements *= option_accumulator
+                option_accumulator = 0
+                prev_options_count = 0
+            continue
+
+        # here's the magic math:
+        # if our previous option set was > 1, we need to add those total
+        # options together to account for all of the possible paths they represent
+        # if the previous options set was larger than our current options set, we need
+        # to offset our path options by the difference between them, because that
+        # number of path options has already been captured by the PREVIOUS options
+        # (or you know, magic)
+        offset = 0
+        if prev_options_count > options_count:
+            offset = prev_options_count - options_count
+        option_accumulator += options_count - offset
+        prev_options_count = len(options)
 
     return valid_arrangements
 
