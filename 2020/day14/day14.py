@@ -89,6 +89,7 @@ import sys
 # we're working with 36-bit binary
 BIT_OFFSET = 35
 
+
 def main():
     input_file = sys.argv[1]
     try:
@@ -102,7 +103,11 @@ def main():
             )
 
             # part 2: sum all values written to memory after the instructions are processed applying bitmasks to memory addresses
-            print(sum_values_in_memory(process_instructions_masking_address(raw_instructions)))
+            print(
+                sum_values_in_memory(
+                    process_instructions_masking_address(raw_instructions)
+                )
+            )
 
     except Exception as error:
         print(error)
@@ -157,9 +162,11 @@ def process_instructions_masking_address(instructions):
                     bitmask_stable_bits.append((index, char))
         elif line_parts[0].startswith("mem"):
             memory_address, binary_value = parse_memory_address_and_value(line_parts)
-            possible_memory_addresses = apply_mask_to_address(bitmask_stable_bits, bitmask_unstable_bits, memory_address)
+            possible_memory_addresses = apply_mask_to_address(
+                bitmask_stable_bits, bitmask_unstable_bits, memory_address
+            )
             for address in possible_memory_addresses:
-              memory[address] = binary_value
+                memory[address] = binary_value
 
     return memory
 
@@ -202,16 +209,28 @@ def apply_mask_to_address(bitmask_stable_bits, bitmask_unstable_bits, memory_add
     max_bit_index = BIT_OFFSET - bitmask_unstable_bits[0]
     seed_address_string = "".join(transformed_address)
     seed_address_1 = int(seed_address_string, 2)
-    seed_address_2 = int("".join(seed_address_string[0:max_bit_index] + "0" + seed_address_string[max_bit_index+1:]), 2)
-    
+    seed_address_2 = int(
+        "".join(
+            seed_address_string[0:max_bit_index]
+            + "0"
+            + seed_address_string[max_bit_index + 1 :]
+        ),
+        2,
+    )
+
     # append the seed addresses to the list - they are also possibilities
-    possible_addresses += [ seed_address_1, seed_address_2 ]
+    possible_addresses += [seed_address_1, seed_address_2]
 
     # calculate all possible addresses that can originate from the seed addresses
-    possible_addresses += calculate_possible_addresses_from_seed(bitmask_unstable_bits[1:], seed_address_1) + calculate_possible_addresses_from_seed(bitmask_unstable_bits[1:], seed_address_2)
+    possible_addresses += calculate_possible_addresses_from_seed(
+        bitmask_unstable_bits[1:], seed_address_1
+    ) + calculate_possible_addresses_from_seed(
+        bitmask_unstable_bits[1:], seed_address_2
+    )
 
     print(possible_addresses)
     return possible_addresses
+
 
 # recursive sliding subtraction -> continually subtract (2^m + 2^n + ...) where m and n are the locations
 # in the binary string of the unstable bits in the bit mask - we'll do this for every value in in the
@@ -223,7 +242,9 @@ def calculate_possible_addresses_from_seed(bitmask_unstable_bits, seed_address):
         next_seed_address = seed_address - (2 ** unstable_bit_location)
         possible_addresses.append(next_seed_address)
         # subtract the rest of the 2^n from this seed
-        possible_addresses += calculate_possible_addresses_from_seed(bitmask_unstable_bits[list_index + 1:], next_seed_address)
+        possible_addresses += calculate_possible_addresses_from_seed(
+            bitmask_unstable_bits[list_index + 1 :], next_seed_address
+        )
 
     return possible_addresses
 
