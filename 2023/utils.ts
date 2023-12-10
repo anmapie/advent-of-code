@@ -13,3 +13,7 @@ export function readFileIntoArray(): string[] | null {
     return null;
   }
 }
+
+export function computeSumOfArray(arr: number[]): number {
+  return arr.reduce((sum, currNum) => (sum += currNum), 0);
+}
