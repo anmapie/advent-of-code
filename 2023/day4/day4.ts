@@ -98,20 +98,13 @@
  * scratchcards are won. Including the original set of scratchcards, how many
  * total scratchcards do you end up with?
  */
-import { readFileIntoArray } from "../utils";
+import { readFileIntoArray, stringToNumberArr } from "../utils";
 
 type ScratchCard = {
   myNumbers: number[];
   winningNumbers: number[];
   instances: number;
 };
-
-function stringToNumberArr(str: string): number[] {
-  return str
-    .split(" ")
-    .filter((numStr) => numStr.length !== 0)
-    .map((numStr) => parseInt(numStr));
-}
 
 // sample line:
 // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53

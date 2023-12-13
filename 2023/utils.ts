@@ -17,3 +17,10 @@ export function readFileIntoArray(): string[] | null {
 export function computeSumOfArray(arr: number[]): number {
   return arr.reduce((sum, currNum) => (sum += currNum), 0);
 }
+
+export function stringToNumberArr(str: string): number[] {
+  return str
+    .split(" ")
+    .map((numStr) => parseInt(numStr))
+    .filter((num) => !isNaN(num));
+}
