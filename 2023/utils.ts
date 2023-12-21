@@ -18,6 +18,10 @@ export function computeSumOfArray(arr: number[]): number {
   return arr.reduce((sum, currNum) => (sum += currNum), 0);
 }
 
+export function computeProductOfArray(arr: number[]): number {
+  return arr.reduce((product, currNum) => (product *= currNum), 1);
+}
+
 export function stringToNumberArr(str: string): number[] {
   return str
     .split(" ")
